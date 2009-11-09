@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<node node_id="69">
+	<node class="folder">
+		<node class="folder" qty="2">
+			<node class="image" qty="1"></node>
+			<node class="folder" qty="3">
+				<node class="comment" qty="3"></node>
+			</node>
+		</node>
+		<node class="file" qty="2"></node>
+	</node>
+</node>

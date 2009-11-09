@@ -1,0 +1,4 @@
+0. Tests phpunit
+1. Cron qui parcourt tous les XML dans l'extension, et qui met à jour la base de données : utiles pour les dev en local
+2. Gestion des relations d'objet(s)
+3. Meilleure gestion des erreurs, et des fichiers de configuration
