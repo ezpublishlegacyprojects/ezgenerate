@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Functions used to read the source XML file and create the content tree
+ *
+ * $LastChangedDate$
+ * $Revision$
+ * $Author$
+ */
 class HelperXml
 {
 	//recursive function
@@ -9,18 +16,25 @@ class HelperXml
 		
 		//if this is not the root
 		if(!$simpleXmlNode['node_id']) {
-			
+print'----Node----';			
+			//print_r($simpleXmlNode);exit;
 			//get the class from XML, and check if the class exists in eZ database
 			$className = (string)$simpleXmlNode['class'];
+			print "*$className*";
 			$contentClass = eZContentClass::fetchByIdentifier( $className );
+			print 'fin fetch';
 			if ( !is_object( $contentClass ) )
 			{
 				return false;
 			}
 		}
+		else {
+			print '--- Root---';
+		}
 		
 		//for each child, check if the class exists
 		foreach($simpleXmlNode->children() as $child) {
+			//print_r($child);
 			$result = $result && self::checkClasses($child);
 		}
 		
@@ -43,7 +57,7 @@ class HelperXml
 				$qty = 1;
 			}
 			
-			print "Creating $qty node(s) of $className in node $parentNodeId \n";
+			eZDebug::writeNotice( "Creating $qty node(s) of $className in node $parentNodeId", 'HelperXml::generate' );
 			
 			//define params for creating nodes
 			$params['parent_node_id'] = $parentNodeId;
@@ -54,7 +68,6 @@ class HelperXml
 				$object = eZExtendedContentFunctions::createAndPublishObjectWithRandomData($params);
 								
 				if($object) {
-					
 					//try to create all children in this node
 					$parentNodeId = $object->mainNodeID();
 					foreach($simpleXmlNode->children() as $child) {

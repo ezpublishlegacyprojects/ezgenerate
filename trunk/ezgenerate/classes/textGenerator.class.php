@@ -1,7 +1,10 @@
 <?php
 /**
- * @author Administrator
+ * Generate some random text
  *
+ * $LastChangedDate$
+ * $Revision$
+ * $Author$
  */
 class TextGenerator 
 {

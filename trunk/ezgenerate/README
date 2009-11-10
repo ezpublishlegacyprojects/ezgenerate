@@ -1,0 +1,32 @@
+1. Install the extension
+2. Activate it
+3. Regenerate the autoload array
+4. Define the source xml in data/source/
+Here is an example :
+------------------------------------------------------------------------------------------------------------------
+	<?xml version="1.0" encoding="UTF-8"?>
+	<node node_id="69"> 									<!-- node id of the root node -->
+		<node class="folder"> 								<!-- under the root, create a folder -->
+			<node class="folder" qty="2"> 					<!-- under the folder, create 2 other folders -->
+				<node class="image" qty="1"></node>			<!-- under each of the 2 folders, create 1 image -->
+				<node class="folder" qty="3">				<!-- under each of the 2 folders, create 3 folders -->
+					<node class="comment" qty="3"></node>	<!-- under each of the 3 folders, create 3 comments -->
+				</node>
+			</node>
+			<node class="file" qty="2"></node>				<!-- under the folder, create 2 files -->
+		</node>
+		<node class="comment"></node>						<!-- under the root, create a comment -->
+	</node>
+------------------------------------------------------------------------------------------------------------------
+
+5. Run the cronjob : 
+php runcronjobs.php generate --file=source.xml
+
+or with debug :
+php runcronjobs.php -d generate --file=source.xml
+
+6. All classes in the xml are checked. If ok, the generation begins.
+
+
+
+

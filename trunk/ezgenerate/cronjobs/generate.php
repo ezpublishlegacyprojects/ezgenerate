@@ -1,5 +1,13 @@
 <?php
 
+/**
+ * Cronjob that reads the source Xml file and creates the contents with random data
+ *
+ * $LastChangedDate$
+ * $Revision$
+ * $Author$
+ */
+
 include_once('extension/ezgenerate/classes/helperXml.class.php');
 
 //initialize INI
@@ -11,11 +19,27 @@ $logFile = $generateIni->variable('Configuration', 'LogFile');
 $logs = new eZLog();
 $logs->write("Begin generation", $logFile);
 
-	
 //initialize cli
-$cli = eZCLI::instance();
+//$cli = eZCLI::instance();
 $cli->setUseStyles( true );
 $cli->output( $cli->stylize( 'cyan', "Begin generation\n" ), false );
+
+//check parameters
+$fileName = '';
+foreach( $_SERVER['argv'] as $param )  {
+	
+	//find the param with the source file
+	if( strstr($param,'--file') ) {
+		$arguments = explode('=',$param);
+		$fileName = 'extension/ezgenerate/'.$generateIni->variable('Configuration', 'SourcePath').$arguments[1];	
+	}
+}
+
+if( $fileName == '' ) {
+	$cli->output( $cli->stylize( 'red', "No parameter for file\n Use --file=source.xml" ), false );
+	return;
+} 
+
 
 //fetch the user to create objects
 $user = eZUser::fetch($generateIni->variable('User', 'ObjectId'));
@@ -27,10 +51,7 @@ if( !$user ) {
 }
 $user->loginCurrent();
 
-
-//file name without the first slash
-$fileName = "extension/ezgenerate/data/sources/tree.xml";
-
+//begin the generation
 if (is_readable($fileName)) {
     $xml = simplexml_load_file($fileName);
 	$cli->output( $cli->stylize( 'green', "Loading $fileName\n" ), false );
@@ -46,7 +67,14 @@ if (is_readable($fileName)) {
 			$cli->output( $cli->stylize( 'green', "All classes defined are available.\n" ), false );
 			
 			//everything is fine, begin to generate
-			HelperXml::generate($xml);
+			$result = HelperXml::generate($xml);
+			
+			if( $result ) {
+				$cli->output( $cli->stylize( 'green', "Generation succeed !\n" ), false );
+			}
+			else {
+				$cli->output( $cli->stylize( 'red', "An error occured during the creation.\n" ), false );
+			}
 			
 		}
 		else {
@@ -60,9 +88,6 @@ if (is_readable($fileName)) {
 else {
 	$cli->output( $cli->stylize( 'red', "Loading $fileName failed\n" ), false );
 }
-
-//initialize BD
-//$db = eZDB::instance ();
 
 $cli->output( $cli->stylize( 'cyan', "End\n" ), false );
 $logs->write("End", $logFile);

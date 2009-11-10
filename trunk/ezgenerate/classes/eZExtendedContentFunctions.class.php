@@ -1,5 +1,12 @@
 <?php
 
+/**
+ * Create and publish nodes in eZ Publish. The objects and nodes are filled with random data.
+ *
+ * $LastChangedDate$
+ * $Revision$
+ * $Author$
+ */
 
 class eZExtendedContentFunctions extends eZContentFunctions
 {
@@ -16,7 +23,7 @@ class eZExtendedContentFunctions extends eZContentFunctions
 
 		$parentNode = eZContentObjectTreeNode::fetch( $parentNodeID, false, false );
 		
-		print " - Creation of $classIdentifier in $parentNodeID";
+		eZDebug::writeNotice( " - Creation of $classIdentifier in $parentNodeID", 'eZExtendedContentFunctions::createAndPublishObjectWithRandomData' );
 
 		if ( is_array( $parentNode ) )
 		{
@@ -45,7 +52,6 @@ class eZExtendedContentFunctions extends eZContentFunctions
 				$attributes = $contentObject->attribute( 'contentobject_attributes' );
 				
 				//load the source of the text
-				//TODO: mettre la source en parametre
 				$generateIni 	= eZINI::instance( 'generate.ini' );
 				$extensionDir	= eZExtension::baseDirectory().'/ezgenerate/';
 				$sourceFile		= $extensionDir.$generateIni->variable('Configuration', 'TextSource');
@@ -145,6 +151,7 @@ class eZExtendedContentFunctions extends eZContentFunctions
 				//commit if all went fine
 				if( $operationResult['status'] ) {
 					$db->commit();
+					eZDebug::writeNotice( " -> node ".$nodeAssignment->attribute('id')." created.", 'eZExtendedContentFunctions::createAndPublishObjectWithRandomData' );
 				}
 				else {
 					$db->rollback();
@@ -161,7 +168,7 @@ class eZExtendedContentFunctions extends eZContentFunctions
 			eZDebug::writeError( "Node with id '$parentNodeID' doesn't exist.", 'eZExtendedContentFunctions::createAndPublishObjectWithRandomData' );
 		}
 		
-		print " -> node ".$nodeAssignment->attribute('id')." created. \n";
+		
 		return $contentObject;
 	}
 }

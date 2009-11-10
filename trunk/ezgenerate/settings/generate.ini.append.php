@@ -6,6 +6,10 @@
 ObjectId=14
 
 [Configuration]
+#path where xml files are stored
+SourcePath=data/sources/
+
+#you should not modify it until you know what you did
 LogFile=generate.log
 TextSource=data/sources/lorem_ipsum.xml
 FilesDir=data/files/
