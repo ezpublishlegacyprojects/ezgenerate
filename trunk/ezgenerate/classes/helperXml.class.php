@@ -16,25 +16,17 @@ class HelperXml
 		
 		//if this is not the root
 		if(!$simpleXmlNode['node_id']) {
-print'----Node----';			
-			//print_r($simpleXmlNode);exit;
 			//get the class from XML, and check if the class exists in eZ database
 			$className = (string)$simpleXmlNode['class'];
-			print "*$className*";
 			$contentClass = eZContentClass::fetchByIdentifier( $className );
-			print 'fin fetch';
 			if ( !is_object( $contentClass ) )
 			{
 				return false;
 			}
 		}
-		else {
-			print '--- Root---';
-		}
 		
 		//for each child, check if the class exists
 		foreach($simpleXmlNode->children() as $child) {
-			//print_r($child);
 			$result = $result && self::checkClasses($child);
 		}
 		
